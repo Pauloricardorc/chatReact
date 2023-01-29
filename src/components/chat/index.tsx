@@ -17,8 +17,8 @@ export function Chat() {
   const { logout, user } = useAuth0();
   const messagesRef = collection(firestore, "messages");
   const q = query(messagesRef, orderBy("createdAt"), limit(25));
-  const [messages] = useCollectionData(q, { idField: "id" });
-  const dummy = useRef();
+  const [messages] = useCollectionData(q);
+  const dummy = useRef<any>();
 
   const [formValue, setFormValue] = useState("");
 
@@ -52,7 +52,7 @@ export function Chat() {
       <main className="overflow-auto h-full bg-slate-300 flex flex-col p-2">
         {messages &&
           messages.map((msg, index) => <Message key={index} message={msg} />)}
-        <div ref={dummy}></div>
+        <div ref={dummy || undefined}></div>
       </main>
       <form onSubmit={sendMessage}>
         <footer className="h-14 border-t bg-slate-200 flex items-center p-2 gap-2 px-4">
