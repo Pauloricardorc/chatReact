@@ -2,10 +2,12 @@ import { useAuth0 } from "@auth0/auth0-react";
 import {
   addDoc,
   collection,
+  doc,
   limit,
   orderBy,
   query,
   serverTimestamp,
+  setDoc,
 } from "firebase/firestore";
 import { Atom, PaperPlaneRight, SignOut } from "phosphor-react";
 import { firestore } from "../../service/firebase/firebase";
@@ -35,6 +37,26 @@ export function Chat() {
     dummy.current.scrollIntoView({ behavior: "smooth" });
   };
 
+  async function setNewUser() {
+    const docRef = doc(firestore, "users", user.email);
+
+    const data = {
+      id: user?.sub,
+      nome: user?.name,
+      email: user?.email,
+      foto: user?.picture,
+      data: new Date(),
+      online: false,
+    };
+
+    setDoc(docRef, data);
+  }
+
+  function handleLogout() {
+    setNewUser();
+    logout();
+  }
+
   return (
     <div className="w-[70%] h-full mb-10 border rounded-md flex flex-col justify-between overflow-hidden">
       <header className="h-14 bg-blue-400 flex items-center px-4 w-full justify-between">
@@ -43,7 +65,7 @@ export function Chat() {
           <p className="text-gray-100 font-semibold text-lg">ChatReact</p>
         </div>
         <button
-          onClick={() => logout()}
+          onClick={() => handleLogout()}
           className="bg-red-500 rounded-full p-2 active:opacity-90 drop-shadow-md active:drop-shadow-none"
         >
           <SignOut size={22} className="text-gray-50" />

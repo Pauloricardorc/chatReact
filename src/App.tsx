@@ -1,5 +1,12 @@
 import { useAuth0 } from "@auth0/auth0-react";
-import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  doc,
+  getDocs,
+  query,
+  where,
+} from "firebase/firestore";
 import { useEffect } from "react";
 import { Chat } from "./components/chat";
 import { Header } from "./components/header";
@@ -10,6 +17,7 @@ function App() {
 
   const createUser = async () => {
     const ref = collection(firestore, "users");
+    const docRef = doc(firestore, "users");
     const q = query(
       collection(firestore, "users"),
       where("id", "==", user?.sub)
@@ -18,6 +26,7 @@ function App() {
     if (querySnapshot.empty === true) {
       await addDoc(ref, {
         id: user?.sub,
+        nome: user?.name,
         email: user?.email,
         foto: user?.picture,
         data: new Date(),
@@ -27,6 +36,7 @@ function App() {
       if (doc.data().id !== user?.sub) {
         await addDoc(ref, {
           id: user?.sub,
+          nome: user?.name,
           email: user?.email,
           foto: user?.picture,
           data: new Date(),

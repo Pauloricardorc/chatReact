@@ -1,5 +1,6 @@
 import { useAuth0 } from "@auth0/auth0-react";
 import { Navigate, Outlet } from "react-router-dom";
+import { Logged } from "./components/logged";
 
 export function PrivateRouter() {
   const { isAuthenticated, isLoading } = useAuth0();
@@ -12,5 +13,12 @@ export function PrivateRouter() {
     );
   }
 
-  return isAuthenticated ? <Outlet /> : <Navigate to="/login" />;
+  return isAuthenticated ? (
+    <>
+      <Logged />
+      <Outlet />
+    </>
+  ) : (
+    <Navigate to="/login" />
+  );
 }
